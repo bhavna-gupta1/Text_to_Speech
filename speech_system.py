@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-
+from tkinter import END
 from tkinter import filedialog
 from tkinter.ttk  import Combobox
 import pyttsx3
@@ -11,6 +11,35 @@ root.title('Text to Speech converter')
 root .geometry('900x500')
 root.resizable(False,False)
 root.configure(bg='#305065')
+
+engine= pyttsx3.init()
+def speak_now():
+    text = text_area.get(1.0,END)
+    gender = gender_combobox.get()
+    speed = speed_combobox.get()
+    voices = engine.getProperty('voices')
+
+    def setvoice():
+        if (gender=='Male'):
+            engine.setProperty('voice',voices[0].id)
+            engine.say(text)
+            engine.runAndWait()
+        else:
+             engine.setProperty('voice',voices[1].id)
+             engine.say(text)
+             engine.runAndWait()
+    if(text):
+        if(speed=='Fast'):
+            engine.setProperty('rate',250)
+            setvoice()
+        elif(speed=='Normal'):
+            engine.setProperty('rate',150)
+            setvoice()
+        else:
+            engine.setProperty('rate',60)
+            setvoice()  
+def download():
+    print()
 
 label_result=tk.Label(root,width=700,height=2,text="Text To Speech",font=('arial',30),bg='white',anchor="w", justify="left",padx=100)
 label_result.place(x=0,y=20)
@@ -30,19 +59,21 @@ mike_label.place(x=20, y=40)
 text_area = tk.Text(root,font=('arial',30),bg='white',relief='groove',wrap='word')
 text_area.place(x=10,y=130,width=470,height=330)
 
+tk.Label(root,text='Voice',font=('arial',20),fg='white',bg="#305065").place(x=550,y=150)
+tk.Label(root,text='Speed',font=('arial',20),fg='white',bg="#305065").place(x=730,y=150)
 gender_combobox=Combobox(root,value=[ 'Male','Female'],font=('arial',15),state='r',width=12)
 gender_combobox.place(x=520,y=200)
 gender_combobox.set('Male')
-gender_label= tk.Label(root,text='Voice',font=('arial',20),fg='white',bg="#305065")
-gender_label.place(x=550,y=150)
+# gender_label= tk.Label(root,text='Voice',font=('arial',20),fg='white',bg="#305065")
+# gender_label.place(x=550,y=150)
 
 speed_combobox=Combobox(root,value=[ 'Normal','Fast','Slow'],font=('arial',15),state='r',width=12)
 speed_combobox.place(x=700,y=200)
 speed_combobox.set('Normal')
-speed_label= tk.Label(root,text='Speed',font=('arial',20),fg='white',bg="#305065")
-speed_label.place(x=730,y=150)
+# speed_label= tk.Label(root,text='Speed',font=('arial',20),fg='white',bg="#305065")
+# speed_label.place(x=730,y=150)
 
-btn= tk.Button(root,text='Speak',width=10,font=('arial',14,'bold'), justify="right",padx=10)
+btn= tk.Button(root,text='Speak',width=10,font=('arial',14,'bold'), justify="right",padx=10,command=speak_now)
 btn.place(x=520,y=280)
 
 # Speak
@@ -51,15 +82,15 @@ width, height = 30, 30
 Speak_img = Speak.resize((width, height))
 Speakimg = ImageTk.PhotoImage(Speak_img)
 
-Speak_label = tk.Label(root, image=Speakimg, bg="white", pady=100)
-Speak_label.place(x=520, y=283)
+# Speak_label = tk.Label(root, image=Speakimg, bg="white", pady=100)
+# Speak_label.place(x=520, y=283)
 
 # download
-btn2= tk.Button(root,text='Download',width=10,font=('arial',14,'bold'), justify="right",padx=15)
+btn2= tk.Button(root,text='Download',width=10,font=('arial',14,'bold'), justify="right",padx=15,command=download)
 btn2.place(x=700,y=280)
-download = Image.open('download.png')  # Provide the correct path to 'download.png'
+download_img1 = Image.open('download.png')  # Provide the correct path to 'download.png'
 width, height = 30, 30
-download_img = download.resize((width, height))
+download_img = download_img1.resize((width, height))
 downloadimg = ImageTk.PhotoImage(download_img)
 
 download_label = tk.Label(root, image=downloadimg, bg="white", pady=100)
